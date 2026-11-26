@@ -1,0 +1,8 @@
+apiVersion: v2
+name: demo
+description: Demo web app (podinfo) deployed to EKS by Argo CD
+type: application
+# Chart version: bump when you change templates.
+version: 0.1.0
+# App version: the podinfo release this chart is tested with.
+appVersion: "6.15.0"

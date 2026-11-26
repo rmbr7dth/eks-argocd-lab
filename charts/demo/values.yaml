@@ -1,0 +1,9 @@
+replicaCount: 2
+image: ghcr.io/stefanprodan/podinfo:6.15.0
+ui:
+  color: "#34577c"
+  message: "Hello from Argo CD"
+resources:
+  cpu: 50m           # reserve 0.05 of a CPU core per pod
+  memory: 64Mi       # reserve 64 MiB RAM per pod
+  memoryLimit: 128Mi # hard cap: above this, the pod is killed and restarted
