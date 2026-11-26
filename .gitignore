@@ -1,0 +1,15 @@
+# Terraform working files and state (state lives in S3, never in Git)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Generated per machine by scripts/bootstrap.sh (account ID, your IP)
+infra/backend.hcl
+infra/terraform.tfvars
+
+# macOS
+.DS_Store
+readme-sa.txt
