@@ -1,0 +1,6 @@
+# Values for the official argo-cd Helm chart (https://argoproj.github.io/argo-helm).
+# Keep this small: a lab install that you reach with kubectl port-forward.
+
+# Dex provides SSO login. Not needed for a lab (we log in as admin).
+dex:
+  enabled: false
