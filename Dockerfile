@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Copy requirements first — Docker caches this layer.
 # If requirements.txt hasn't changed, pip install is skipped on rebuild.
-COPY app/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 
