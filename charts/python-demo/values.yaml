@@ -1,0 +1,12 @@
+replicaCount: 2
+image:
+  repository: REGISTRY/python-demo
+  tag: latest
+ui:
+  color: "#34577c"
+  message: "Hello from Argo CD"
+appVersion: "dev"
+resources:
+  cpu: 50m
+  memory: 64Mi
+  memoryLimit: 128Mi
