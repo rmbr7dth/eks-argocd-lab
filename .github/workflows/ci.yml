@@ -15,9 +15,6 @@ jobs:
   terraform:
     name: terraform fmt + validate
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: infra
     steps:
       - uses: actions/checkout@v6
 
@@ -27,20 +24,29 @@ jobs:
           terraform_wrapper: false
 
       - name: Format check
-        run: terraform fmt -check -recursive -diff
+        run: terraform fmt -check -recursive -diff infra/
 
-      # -backend=false: download providers/modules only, never touch S3 state.
-      - name: Init (no backend)
-        run: terraform init -backend=false -input=false
+      # infra/ — VPC + EKS (phase 1)
+      - name: Init infra (no backend)
+        run: terraform -chdir=infra init -backend=false -input=false
 
-      - name: Validate
-        run: terraform validate
+      - name: Validate infra
+        run: terraform -chdir=infra validate
+
+      # infra/global/ — ECR + OIDC (phase 2)
+      - name: Init infra/global (no backend)
+        run: terraform -chdir=infra/global init -backend=false -input=false
+
+      - name: Validate infra/global
+        run: terraform -chdir=infra/global validate
+
+
 
   helm:
     name: helm lint + template
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - uses: azure/setup-helm@v5
         with:
@@ -79,3 +85,21 @@ jobs:
 
       - name: Test
         run: pytest tests/ -v
+
+  trivy:
+    name: trivy scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image for scanning
+        run: docker build -t python-demo:ci -f Dockerfile app/
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: python-demo:ci
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
