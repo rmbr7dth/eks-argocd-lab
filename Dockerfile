@@ -21,7 +21,7 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 
 # Copy the app source code
-COPY app/ .
+COPY . .
 
 # Run as non-root user (UID 1000)
 # Security: if the app is compromised, attacker has no root access
