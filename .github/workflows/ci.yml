@@ -44,10 +44,38 @@ jobs:
 
       - uses: azure/setup-helm@v5
         with:
-          version: v4.3.0 # ← replace with YOUR `helm version --short` (no +g… part)
+          version: v4.3.0
 
       - name: Lint
-        run: helm lint charts/demo
+        run: |
+          helm lint charts/demo
+          helm lint charts/python-demo
 
       - name: Render templates
-        run: helm template demo charts/demo > /dev/null
+        run: |
+          helm template demo charts/demo > /dev/null
+          helm template python-demo charts/python-demo > /dev/null
+
+  python:
+    name: python test + lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test
+        run: pytest tests/ -v
